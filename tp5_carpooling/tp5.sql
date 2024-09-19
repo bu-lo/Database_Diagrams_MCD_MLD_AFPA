@@ -58,7 +58,6 @@ CREATE TABLE general_condition(
 CREATE TABLE employee(
    id SERIAL,
    administrator BOOLEAN NOT NULL,
-   role VARCHAR(20)  NOT NULL,
    contract_duration VARCHAR(30)  NOT NULL,
    id_user_carpooler INTEGER NOT NULL,
    PRIMARY KEY(id),
@@ -114,6 +113,7 @@ CREATE TABLE journey(
    journey_description VARCHAR(200) ,
    driver_validation BOOLEAN NOT NULL,
    status VARCHAR(15)  NOT NULL,
+   price NUMERIC(5,2)   NOT NULL,
    id_user_carpooler INTEGER NOT NULL,
    id_vehicle INTEGER NOT NULL,
    PRIMARY KEY(id),
@@ -192,8 +192,15 @@ CREATE TABLE comment(
 CREATE TABLE travel_with(
    id_journey INTEGER,
    id_user_carpooler INTEGER,
-   type VARCHAR(50)  NOT NULL,
    PRIMARY KEY(id_journey, id_user_carpooler),
    FOREIGN KEY(id_journey) REFERENCES journey(id),
    FOREIGN KEY(id_user_carpooler) REFERENCES user_carpooler(id)
 );
+
+CREATE TABLE general_condition(
+   id SERIAL,
+   accepted BOOLEAN NOT NULL,
+   PRIMARY KEY(id)
+);
+
+
