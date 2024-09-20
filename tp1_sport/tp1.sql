@@ -1,9 +1,9 @@
 CREATE TABLE team(
-   id SERIAL,
+   Id SERIAL,
    team_code INTEGER NOT NULL,
    name VARCHAR(50)  NOT NULL,
-   creation_date DATE,
-   PRIMARY KEY(id)
+   creation_date DATE NOT NULL,
+   PRIMARY KEY(Id)
 );
 
 CREATE TABLE person(
@@ -14,40 +14,41 @@ CREATE TABLE person(
 );
 
 CREATE TABLE player(
-   id SERIAL,
-   team_id integer,
-   person_id integer,
+   Id SERIAL,
    registration_number INTEGER NOT NULL,
    birthdate DATE NOT NULL,
-   PRIMARY KEY(id),
-   FOREIGN KEY(team_id) REFERENCES team(id),
-   FOREIGN KEY(person_id) REFERENCES person(id)
+   id_team INTEGER,
+   id_person INTEGER NOT NULL,
+   PRIMARY KEY(Id),
+   UNIQUE(id_person),
+   FOREIGN KEY(id_team) REFERENCES team(Id),
+   FOREIGN KEY(id_person) REFERENCES person(id)
 );
 
 CREATE TABLE referee(
-   id SERIAL,
-   person_id integer
+   id VARCHAR(50) ,
    number INTEGER NOT NULL,
+   id_person INTEGER NOT NULL,
    PRIMARY KEY(id),
-   FOREIGN KEY(person_id) REFERENCES person(id)
+   UNIQUE(id_person),
+   FOREIGN KEY(id_person) REFERENCES person(id)
 );
 
-CREATE TABLE "match"(
-   id SERIAL,
-   referee_id integer,
+CREATE TABLE _match_(
+   id VARCHAR(50) ,
    number INTEGER NOT NULL,
-   "date" DATE,
+   _date_ DATE NOT NULL,
    start_time TIMESTAMP NOT NULL,
+   id_referee VARCHAR(50)  NOT NULL,
    PRIMARY KEY(id),
-   FOREIGN KEY(referee_id) REFERENCES referee(id)
+   FOREIGN KEY(id_referee) REFERENCES referee(id)
 );
 
-CREATE TABLE team_match(
-   id INTEGER,
-   team_id integer,
-   match_id integer,
-   "result" VARCHAR(50) ,
-   PRIMARY KEY(id),
-   FOREIGN KEY(team_id) REFERENCES team(id),
-   FOREIGN KEY(match_id) REFERENCES "match"(id)
+CREATE TABLE matching(
+   id_team INTEGER,
+   id_match VARCHAR(50) ,
+   _result_ VARCHAR(50)  NOT NULL,
+   PRIMARY KEY(id_team, id_match),
+   FOREIGN KEY(id_team) REFERENCES team(Id),
+   FOREIGN KEY(id_match) REFERENCES _match_(id)
 );

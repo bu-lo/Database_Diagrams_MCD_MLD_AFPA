@@ -1,23 +1,3 @@
-CREATE TABLE person(
-   id INTEGER,
-   name VARCHAR(50)  NOT NULL,
-   registration_number VARCHAR(50) ,
-   address VARCHAR(50) ,
-   phone VARCHAR(50) ,
-   nationality VARCHAR(50) ,
-   PRIMARY KEY(id)
-);
-
-CREATE TABLE person_in_charge(
-   id SERIAL,
-   superior_number INTEGER,
-   role VARCHAR(50)  NOT NULL,
-   id_1 INTEGER NOT NULL,
-   PRIMARY KEY(id),
-   UNIQUE(id_1),
-   FOREIGN KEY(id_1) REFERENCES person(id)
-);
-
 CREATE TABLE discipline(
    id SERIAL,
    name VARCHAR(50) ,
@@ -44,18 +24,38 @@ CREATE TABLE country(
    PRIMARY KEY(id)
 );
 
+CREATE TABLE person(
+   id INTEGER,
+   name VARCHAR(50)  NOT NULL,
+   registration_number VARCHAR(50) ,
+   address VARCHAR(50) ,
+   phone VARCHAR(50) ,
+   nationality VARCHAR(50) ,
+   id_country VARCHAR(50)  NOT NULL,
+   PRIMARY KEY(id),
+   FOREIGN KEY(id_country) REFERENCES country(id)
+);
+
+CREATE TABLE person_in_charge(
+   id SERIAL,
+   superior_number INTEGER,
+   role VARCHAR(50)  NOT NULL,
+   id_person INTEGER NOT NULL,
+   PRIMARY KEY(id),
+   UNIQUE(id_person),
+   FOREIGN KEY(id_person) REFERENCES person(id)
+);
+
 CREATE TABLE competitor(
    id SERIAL,
    birthdate DATE NOT NULL,
    gold_medal INTEGER,
    silver_medal INTEGER,
    bronze_medal INTEGER,
-   id_1 VARCHAR(50)  NOT NULL,
-   id_2 INTEGER NOT NULL,
+   id_person INTEGER NOT NULL,
    PRIMARY KEY(id),
-   UNIQUE(id_2),
-   FOREIGN KEY(id_1) REFERENCES country(id),
-   FOREIGN KEY(id_2) REFERENCES person(id)
+   UNIQUE(id_person),
+   FOREIGN KEY(id_person) REFERENCES person(id)
 );
 
 CREATE TABLE trial(
@@ -65,20 +65,20 @@ CREATE TABLE trial(
    az_code VARCHAR(2) ,
    rounds INTEGER,
    _date_ DATE,
-   id_1 INTEGER NOT NULL,
-   id_2 INTEGER NOT NULL,
+   id_station INTEGER NOT NULL,
+   id_discipline INTEGER NOT NULL,
    PRIMARY KEY(id),
-   FOREIGN KEY(id_1) REFERENCES station(id),
-   FOREIGN KEY(id_2) REFERENCES discipline(id)
+   FOREIGN KEY(id_station) REFERENCES station(id),
+   FOREIGN KEY(id_discipline) REFERENCES discipline(id)
 );
 
-CREATE TABLE rounds(
+CREATE TABLE round(
    id SERIAL,
    date_start TIMESTAMP NOT NULL,
    date_end TIMESTAMP NOT NULL,
-   id_1 INTEGER NOT NULL,
+   id_trial INTEGER NOT NULL,
    PRIMARY KEY(id),
-   FOREIGN KEY(id_1) REFERENCES trial(id)
+   FOREIGN KEY(id_trial) REFERENCES trial(id)
 );
 
 CREATE TABLE manage(
@@ -90,29 +90,29 @@ CREATE TABLE manage(
 );
 
 CREATE TABLE compete(
-   id INTEGER,
-   id_1 INTEGER,
+   id_competitor INTEGER,
+   id_trial INTEGER,
    ranking INTEGER,
    bib INTEGER NOT NULL,
-   PRIMARY KEY(id, id_1),
-   FOREIGN KEY(id) REFERENCES competitor(id),
-   FOREIGN KEY(id_1) REFERENCES trial(id)
+   PRIMARY KEY(id_competitor, id_trial),
+   FOREIGN KEY(id_competitor) REFERENCES competitor(id),
+   FOREIGN KEY(id_trial) REFERENCES trial(id)
 );
 
 CREATE TABLE involve(
-   id INTEGER,
-   id_1 INTEGER,
+   id_competitor INTEGER,
+   id_round INTEGER,
    score INTEGER NOT NULL,
    timer NUMERIC(15,2)   NOT NULL,
-   PRIMARY KEY(id, id_1),
-   FOREIGN KEY(id) REFERENCES competitor(id),
-   FOREIGN KEY(id_1) REFERENCES rounds(id)
+   PRIMARY KEY(id_competitor, id_round),
+   FOREIGN KEY(id_competitor) REFERENCES competitor(id),
+   FOREIGN KEY(id_round) REFERENCES round(id)
 );
 
 CREATE TABLE composed_by(
-   id INTEGER,
-   id_1 INTEGER,
-   PRIMARY KEY(id, id_1),
-   FOREIGN KEY(id) REFERENCES competitor(id),
-   FOREIGN KEY(id_1) REFERENCES team_(id)
+   id_competitor INTEGER,
+   id_team INTEGER,
+   PRIMARY KEY(id_competitor, id_team),
+   FOREIGN KEY(id_competitor) REFERENCES competitor(id),
+   FOREIGN KEY(id_team) REFERENCES team_(id)
 );

@@ -38,6 +38,7 @@ CREATE TABLE spectator(
    phone VARCHAR(50) ,
    id_person INTEGER NOT NULL,
    PRIMARY KEY(id),
+   UNIQUE(id_person),
    FOREIGN KEY(id_person) REFERENCES person(id)
 );
 
@@ -46,27 +47,26 @@ CREATE TABLE worker(
    type VARCHAR(50) ,
    id_person INTEGER NOT NULL,
    PRIMARY KEY(id),
+   UNIQUE(id_person),
    FOREIGN KEY(id_person) REFERENCES person(id)
 );
 
 CREATE TABLE room_spectator(
-   id_room INTEGER,
+   id_performance INTEGER,
    id_spectator INTEGER,
-   id INTEGER NOT NULL,
-   type VARCHAR(50)  NOT NULL,
    booking_date TIMESTAMP NOT NULL,
    place_number INTEGER,
    price_amount NUMERIC(15,2)  ,
-   PRIMARY KEY(id),
-   FOREIGN KEY(id_room) REFERENCES room(id),
+   type VARCHAR(50)  NOT NULL,
+   PRIMARY KEY(id_performance, id_spectator),
+   FOREIGN KEY(id_performance) REFERENCES performance(id),
    FOREIGN KEY(id_spectator) REFERENCES spectator(id)
 );
 
 CREATE TABLE room_show(
    id_room INTEGER,
    id_show INTEGER,
-   id INTEGER NOT NULL,
-   PRIMARY KEY(id),
+   PRIMARY KEY(id_room, id_show),
    FOREIGN KEY(id_room) REFERENCES room(id),
    FOREIGN KEY(id_show) REFERENCES show(id)
 );
@@ -74,17 +74,15 @@ CREATE TABLE room_show(
 CREATE TABLE show_performance(
    id_show INTEGER,
    id_performance INTEGER,
-   id INTEGER,
-   PRIMARY KEY(id),
+   PRIMARY KEY(id_show, id_performance),
    FOREIGN KEY(id_show) REFERENCES show(id),
    FOREIGN KEY(id_performance) REFERENCES performance(id)
 );
 
 CREATE TABLE show_worker(
-   id_show INTEGER,
+   id_work INTEGER,
    id_worker INTEGER,
-   id INTEGER,
-   PRIMARY KEY(id),
-   FOREIGN KEY(id_show) REFERENCES show(id),
+   PRIMARY KEY(id_work, id_worker),
+   FOREIGN KEY(id_work) REFERENCES show(id),
    FOREIGN KEY(id_worker) REFERENCES worker(id)
 );
